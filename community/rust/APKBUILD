@@ -3,10 +3,9 @@
 # Contributor: Jeizsm <jeizsm@gmail.com>
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=rust
-pkgver=1.31.1
-# TODO: bump to 6 as soon as we add llvm6
-_llvmver=5
-_bootver=1.30.0
+pkgver=1.32.0
+_llvmver=7
+_bootver=1.31.1
 pkgrel=1
 pkgdesc="The Rust Programming Language"
 url="http://www.rust-lang.org"
@@ -70,7 +69,6 @@ source="https://static.rust-lang.org/dist/rustc-$pkgver-src.tar.gz
 	install-template-shebang.patch
 	bootstrap-tool-respect-tool-config.patch
 	cargo-tests-ignore-resolving_minimum_version_with_transitive_deps.patch
-	cargo-tests-fix-package-include-exclude.patch
 	check-rustc
 	"
 builddir="$srcdir/rustc-$pkgver-src"
@@ -97,9 +95,6 @@ prepare() {
 build() {
 	cd "$builddir"
 
-	# jemalloc is disabled, because it increases size of statically linked
-	# binaries produced by rustc (stripped hello_world 186 kiB vs. 358 kiB)
-	# for only tiny performance boost (even negative in some tests).
 	./configure \
 		--build="$CBUILD" \
 		--host="$CTARGET" \
@@ -116,8 +111,7 @@ build() {
 		--enable-llvm-link-shared \
 		--enable-option-checking \
 		--enable-locked-deps \
-		--enable-vendor \
-		--disable-jemalloc
+		--enable-vendor
 
 	./x.py build -v --jobs ${JOBS:-2}
 }
