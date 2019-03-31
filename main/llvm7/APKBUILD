@@ -7,7 +7,7 @@ _pkgname=llvm
 pkgver=7.0.1
 _majorver=${pkgver%%.*}
 pkgname=$_pkgname$_majorver
-pkgrel=2
+pkgrel=3
 pkgdesc="Low Level Virtual Machine compiler system, version $_majorver"
 arch="all"
 url="https://llvm.org/"
@@ -21,6 +21,7 @@ source="https://llvm.org/releases/$pkgver/llvm-$pkgver.src.tar.xz
 	fix-memory-mf_exec-on-aarch64.patch
 	fix-LLVMConfig-cmake-install-prefix.patch
 	python3-test.patch
+	rust.patch
 	"
 builddir="$srcdir/$_pkgname-$pkgver.src"
 options="!checkroot"
