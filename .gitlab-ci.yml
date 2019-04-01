@@ -20,13 +20,18 @@ build:
     - sudo -u build abuild checksum
     - sudo -u build abuild-keygen -an
     - sudo -u build abuild -r
-    - git checkout $CI_COMMIT_REF_NAME
-    - git add APKBUILD
-    - git commit -v -a -s --no-edit --amend
-    - git checkout master
-    - git cherry-pick $CI_COMMIT_REF_NAME
-    - git remote set-url origin $GIT_URL
-    - git push --force origin master:upgrade-llvm
+    - sudo -u build abuild cleancache
+    - cd ../../community/rust
+    - sudo -u build abuild checksum
+    - sudo -u build abuild-keygen -an
+    - sudo -u build abuild -r
+    # - git checkout $CI_COMMIT_REF_NAME
+    # - git add APKBUILD
+    # - git commit -v -a -s --no-edit --amend
+    # - git checkout master
+    # - git cherry-pick $CI_COMMIT_REF_NAME
+    # - git remote set-url origin $GIT_URL
+    # - git push --force origin master:upgrade-llvm
     # - docker build -t rust:alpine --no-cache .
     # - docker run --name rust rust:alpine cat /home/build/rust/APKBUILD > APKBUILD
     # - docker rm rust

@@ -31,8 +31,8 @@ makedepends="
 	libgit2-dev
 	openssl-dev
 	libssh2-dev
-	llvm$_llvmver-dev
-	llvm$_llvmver-test-utils
+	llvm$_llvmver-dev=7.0.1-r3
+	llvm$_llvmver-test-utils=7.0.1-r3
 	python2
 	tar
 	zlib-dev
