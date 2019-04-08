@@ -1,0 +1,68 @@
+# Contributor: Marat Safin <jeizsm@gmail.com>
+# Maintainer:
+pkgname=libomp
+pkgver=7.0.1
+pkgrel=0
+pkgdesc="LLVM's OpenMP runtime library"
+url="https://openmp.llvm.org/"
+arch="all"
+license="NCSA or Apache-2.0 WITH LLVM-exception"
+depends=""
+depends_dev="g++"
+checkdepends="coreutils llvm7-test-utils"
+makedepends="build-base cmake clang-dev libelf-dev libffi-dev perl pkgconf"
+install=""
+subpackages="$pkgname-dev"
+source="https://releases.llvm.org/$pkgver/openmp-$pkgver.src.tar.xz"
+builddir="$srcdir/openmp-$pkgver.src"
+replaces="gcc"
+
+prepare() {
+	default_prepare
+	cd "$builddir"
+	mkdir -p "$builddir"/build
+}
+
+build() {
+	cd "$builddir"/build
+	cmake .. \
+		-DLIBOMP_ENABLE_SHARED=TRUE \
+		-DCMAKE_C_COMPILER=clang \
+		-DCMAKE_CXX_COMPILER=clang++ \
+		-DCMAKE_BUILD_TYPE=MinSizeRel \
+		-DCMAKE_C_FLAGS_MINSIZEREL_INIT="$CFLAGS" \
+		-DCMAKE_CXX_FLAGS_MINSIZEREL_INIT="$CXXFLAGS" \
+		-DCMAKE_EXE_LINKER_FLAGS_MINSIZEREL_INIT="$LDFLAGS" \
+		-DOPENMP_LLVM_TOOLS_DIR="/usr/lib/llvm7/bin" \
+		-DCMAKE_INSTALL_PREFIX="/usr"
+	make
+}
+
+check() {
+	cd "$builddir"/build
+	sed -i 's/parallel_id=%" PRIu64 "/parallel_id=%p/g' ../runtime/test/ompt/synchronization/barrier/implicit_task_data.c
+	sed -i 's/parallel_data->value/parallel_data->ptr/g' ../runtime/test/ompt/synchronization/barrier/implicit_task_data.c
+	case "$CARCH" in
+		x86)
+			sed -i 's/config.libomptarget_system_targets = " x86_64-pc-linux-gnu"/config.libomptarget_system_targets = " x86_64-alpine-linux-musl"/' libomptarget/test/lit.site.cfg
+			sed -i 's/config.test_extra_flags = ""/config.test_extra_flags = "-Wl,-dynamic-linker=\/lib\/ld-musl-i386.so.1"/' runtime/test/lit.site.cfg
+		;;
+		x86_64)
+			sed -i 's/config.libomptarget_system_targets = " x86_64-pc-linux-gnu"/config.libomptarget_system_targets = " x86_64-alpine-linux-musl"/' libomptarget/test/lit.site.cfg
+		;;
+		aarch64)
+			sed -i 's/config.libomptarget_system_targets = " aarch64-unknown-linux-gnu"/config.libomptarget_system_targets = " aarch64-alpine-linux-musl"/' libomptarget/test/lit.site.cfg
+		;;
+		ppc64le)
+			sed -i 's/config.libomptarget_system_targets = " powerpc64le-ibm-linux-gnu"/config.libomptarget_system_targets = " ppc64le-alpine-linux-musl"/' libomptarget/test/lit.site.cfg
+		;;
+	esac
+	make check-openmp
+}
+
+package() {
+	cd "$builddir"/build
+	make install DESTDIR="$pkgdir"
+}
+
+sha512sums="2062db8b87bce2c130bab528a6d654cb05b3de7641737552fc263724ceaa5e322afc2787796a0bddcda8d1bdf913a49f5a0180abcc57f8842b7e8ea8df4d6f51  openmp-7.0.1.src.tar.xz"
