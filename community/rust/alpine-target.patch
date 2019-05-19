@@ -9,12 +9,10 @@ and distribution-specific quirks instead of polluting the main musl target of
 
 --- a/src/librustc_target/spec/mod.rs
 +++ b/src/librustc_target/spec/mod.rs
-@@ -412,8 +412,13 @@
-     ("riscv32imac-unknown-none-elf", riscv32imac_unknown_none_elf),
- 
-     ("aarch64-unknown-none", aarch64_unknown_none),
- 
+@@ -414,6 +414,11 @@ supported_targets! {
      ("x86_64-fortanix-unknown-sgx", x86_64_fortanix_unknown_sgx),
+ 
+     ("x86_64-unknown-uefi", x86_64_unknown_uefi),
 +
 +    ("i586-alpine-linux-musl", i586_alpine_linux_musl),
 +    ("x86_64-alpine-linux-musl", x86_64_alpine_linux_musl),

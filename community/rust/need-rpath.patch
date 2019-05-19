@@ -48,7 +48,7 @@ Hacky hacky!
          target_option_val!(static_position_independent_executables);
 --- a/src/librustc_codegen_llvm/back/link.rs
 +++ b/src/librustc_codegen_llvm/back/link.rs
-@@ -1092,7 +1092,10 @@
+@@ -1092,6 +1092,9 @@
      // FIXME (#2397): At some point we want to rpath our guesses as to
      // where extern libraries might live, based on the
      // addl_lib_search_paths
@@ -57,6 +57,5 @@ Hacky hacky!
 +    let bootstrap = env::var("RUSTC_BOOTSTRAP").is_ok();
 +    if !bootstrap && !sess.crt_static() &&
 +       (sess.opts.cg.rpath || sess.target.target.options.need_rpath) {
-         let sysroot = sess.sysroot();
          let target_triple = sess.opts.target_triple.triple();
          let mut get_install_prefix_lib_path = || {
