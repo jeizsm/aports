@@ -4,9 +4,9 @@
 # Contributor: Jeizsm <jeizsm@gmail.com>
 # Maintainer: Rasmus Thomsen <oss@cogitri.dev>
 pkgname=rust
-pkgver=1.34.2
+pkgver=1.35.0
 _llvmver=7
-_bootver=1.33.0
+_bootver=1.34.2
 pkgrel=0
 pkgdesc="The Rust Programming Language"
 url="http://www.rust-lang.org"
